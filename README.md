@@ -94,6 +94,3 @@ NOTE:
 
 Questions / Comments
 
-	email me: joseph-ja at earthlink.net
-
-	Joseph Acosta
