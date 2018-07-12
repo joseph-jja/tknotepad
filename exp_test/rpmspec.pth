@@ -1,0 +1,11 @@
+menu .filemenu.rpm -tearoff 0
+.filemenu add cascade -label "RPM" -underline 0 -menu .filemenu.rpm
+.filemenu.rpm add command -label "New spec file" -underline 0 -command "insertnewtext insertspec"
+.filemenu.rpm add command -label "%define" -command " insertSPECtag %define"
+.filemenu.rpm add command -label "%prep" -command " insertSPECtag %prep"
+.filemenu.rpm add command -label "%setup" -command " insertSPECtag %setup"
+.filemenu.rpm add command -label "%description" -command " insertSPECtag %description"
+.filemenu.rpm add command -label "%install" -command " insertSPECtag %install"
+.filemenu.rpm add command -label "%files" -command " insertSPECtag %files"
+.filemenu.rpm add command -label "%doc" -command " insertSPECtag %doc"
+.filemenu.rpm add command -label "%clean" -command " insertSPECtag %clean"

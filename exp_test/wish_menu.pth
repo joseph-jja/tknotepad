@@ -1,0 +1,150 @@
+# WISH (Tcl/Tk) menu ###################################
+
+menu .filemenu.wish -tearoff 0
+.filemenu add cascade -label "WISH (Tcl/Tk)" -underline 0 -menu .filemenu.wish
+
+# WISH -- New Script
+
+.filemenu.wish add command -label "New Script" -underline 0 \
+	-command new_wish
+
+proc new_wish {} {
+	readytogo
+	outwithold
+	.textinhere insert 1.0 "#!/bin/sh\n# Use the shell to start the wish\
+		interpreter: \\\nexec wish \"\$0\" \$\{1+\"\$@\"\}\n\n#"
+	wm title . "WISH Supernotepad"
+	findoutnew
+}
+
+.filemenu.wish add separator
+
+# WISH -- Matching Braces { }
+
+.filemenu.wish add command -label "Curly Braces \{ \}" -underline 0 -command {
+	set codestart "{"
+	set codend "}"
+	dualcodes
+	} -accelerator F3
+
+bind . <F3> {
+	set codestart "{"
+	set codend "}"
+	dualcodes
+	}
+
+# WISH -- Matching Brackets [ ]
+
+.filemenu.wish add command -label "Square Brackets \[ \]" -underline 0 -command {
+	set codestart {[}
+	set codend {]}
+	dualcodes
+	} -accelerator F4
+
+bind . <F4> {
+	set codestart {[}
+	set codend {]}
+	dualcodes
+	}
+
+.filemenu.wish add separator
+
+# WISH -- Run Selected Code
+
+.filemenu.wish add command -label "Run Selected Code" -underline 0 \
+	-command runcode -accelerator F5
+
+bind . <F5> { runcode }
+	
+proc runcode {} {
+	if {[interp exists testrunner]} {interp delete testrunner}
+	set codesel [.textinhere dump -tag 1.0 end]
+	if { [string first "tagon sel" $codesel] != -1 } {
+		set codetorun [selection get]
+		interp create testrunner
+		load {} Tk testrunner
+		testrunner eval $codetorun
+	} else {
+		tk_messageBox -message "No Code Selected" \
+			-title "No Code" -type ok
+	}
+}
+
+.filemenu.wish add separator
+
+# WISH -- Grid Config
+
+.filemenu.wish add command -label "Grid Config" -underline 0 \
+	-command gridbox -accelerator Ctrl+g
+
+bind . <Control-g> {gridbox}
+
+set rownum 0
+set colnum 0
+set spannum 1
+set stickies "news"
+
+# Procedure for setting up "Grid Config" entry box:
+proc gridbox {} {
+	global rownum colnum spannum stickies
+	toplevel .gridbox
+	wm title .gridbox "Grid Config"
+	tk_setPalette background bisque selectBackground cyan
+	label .gridbox.gridconfig -text "grid config"
+	entry .gridbox.widgetname -width 40 -bg white
+	label .gridbox.row -text "-row"
+	entry .gridbox.rownum -width 3 -bg white -textvariable rownum
+	label .gridbox.col -text "-column"
+	entry .gridbox.colnum -width 3 -bg white -textvariable colnum
+	label .gridbox.span -text "-columnspan"
+	entry .gridbox.spannum -width 3 -bg white -textvariable spannum
+	label .gridbox.sticky -text "-sticky"
+	entry .gridbox.stickies -width 4 -bg white
+	set stickies $stickies
+	.gridbox.stickies insert 0 $stickies
+	button .gridbox.insert -text "Insert" -default active -command gridconfig
+	button .gridbox.cancel -text "Cancel" -default normal -command {destroy .gridbox}
+	grid config .gridbox.gridconfig -row 0 -column 0 -sticky news
+	grid config .gridbox.widgetname -row 0 -column 1 \
+		-columnspan 5 -sticky news
+	grid config .gridbox.row -row 1 -column 0 -sticky news
+	grid config .gridbox.rownum -row 1 -column 1 -sticky news
+	grid config .gridbox.col -row 1 -column 2 -sticky news
+	grid config .gridbox.colnum -row 1 -column 3 -sticky news
+	grid config .gridbox.span -row 1 -column 4 -sticky news
+	grid config .gridbox.spannum -row 1 -column 5 -sticky news
+	grid config .gridbox.sticky -row 2 -column 0 -sticky news
+	grid config .gridbox.stickies -row 2 -column 1 -sticky news
+	grid config .gridbox.insert -row 2 -column 2 \
+		-columnspan 2 -sticky news
+	grid config .gridbox.cancel -row 2 -column 4 \
+		-columnspan 2 -sticky news
+	bind .gridbox.widgetname <Key-Return> {gridconfig}
+	bind .gridbox.colnum <Key-Return> {gridconfig}
+	bind .gridbox.spannum <Key-Return> {gridconfig}
+	bind .gridbox.stickies <Key-Return> {gridconfig}
+	focus .gridbox.widgetname
+}
+
+# Procedure for inserting "grid config" in WISH (Tcl/Tk) code:
+
+proc gridconfig {} {
+	global rownum oldrownum colnum spannum stickies
+	set widgetname [.gridbox.widgetname get]
+	set oldrownum $rownum
+	set rownum [.gridbox.rownum get]
+	set colnum [.gridbox.colnum get]
+	set spannum [.gridbox.spannum get]
+	if { [string match $spannum 1] == 1 } {
+		set spanhere ""
+	} else {
+		set spanhere "-columnspan $spannum"
+	}
+	set stickies [.gridbox.stickies get]
+	.textinhere insert insert "grid config $widgetname -row $rownum \
+		-column $colnum $spanhere -sticky $stickies\n"
+	incr colnum $spannum
+	set spannum 1
+	destroy .gridbox
+	savecheck
+}

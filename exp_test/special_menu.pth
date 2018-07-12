@@ -1,0 +1,441 @@
+# Special menu ########################################################
+
+menu .filemenu.special -tearoff 0
+.filemenu add cascade -label "Special" -underline 3 -menu .filemenu.special
+
+set texttype plain
+set amp "&"
+set lt "<"
+set gt ">"
+set iexcl "¡"
+set cent "¢"
+set pound "£"
+set sect "§"
+set copy "©"
+set reg "®"
+set para "¶"
+set plusmn "±"
+set frac14 "¼"
+set frac12 "½"
+set frac34 "¾"
+set iquest "¿"
+set bigagrave "À"
+set bigaacute "Á"
+set bigacirc "Â"
+set bigatilde "Ã"
+set bigauml "Ä"
+set bigaelig "Æ"
+set bigccedil "Ç"
+set bigegrave "È"
+set bigeacute "É"
+set bigecirc "Ê"
+set bigeuml "Ë"
+set bigiacute "Í"
+set bigicirc "Î"
+set bigiuml "Ï"
+set bigntilde "Ñ"
+set bigoacute "Ó"
+set bigocirc "Ô"
+set bigouml "Ö"
+set bigoslash "Ø"
+set biguacute "Ú"
+set bigucirc "Û"
+set biguuml "Ü"
+set szlig "ß"
+set agrave "à"
+set aacute "á"
+set acirc "â"
+set atilde "ã"
+set auml "ä"
+set aelig "æ"
+set ccedil "ç"
+set egrave "è"
+set eacute "é"
+set ecirc "ê"
+set euml "ë"
+set iacute "í"
+set icirc "î"
+set iuml "ï"
+set ntilde "ñ"
+set oacute "ó"
+set ocirc "ô"
+set ouml "ö"
+set oslash "ø"
+set uacute "ú"
+set ucirc "û"
+set uuml "ü"
+
+proc putintext {} {
+	global charo
+	.textinhere insert insert $charo
+	focus .textinhere
+	savecheck
+}
+
+# Procedure for setting up special-character selection box:
+proc specialbox {} {
+	global texttype charo amp lt gt iexcl cent pound sect copy reg para plusmn \
+		 frac14 frac12 frac34 iquest bigagrave bigaacute bigacirc \
+		bigatilde bigauml bigaelig bigccedil bigegrave bigeacute bigecirc bigeuml \
+		bigiacute bigicirc bigiuml bigntilde bigoacute bigocirc bigouml \
+		bigoslash biguacute bigucirc biguuml szlig agrave aacute acirc atilde auml aelig \
+		ccedil egrave eacute ecirc euml iacute icirc iuml ntilde oacute ocirc ouml oslash \
+		uacute ucirc uuml
+	toplevel .spec
+	if { [string match $texttype html ] } {
+		wm title .spec "Special Characters - HTML"
+	} else {
+		wm title .spec "Special Characters - Plain Text"
+	}
+	set buff -adobe-helvetica-bold-r-normal--18-*-*-*-*-*-*
+	tk_setPalette background bisque selectBackground cyan
+	button .spec.amp -text $amp -font $buff
+	button .spec.lt -text $lt -font $buff
+	button .spec.gt -text $gt -font $buff
+	button .spec.iexcl -text $iexcl -font $buff
+	button .spec.cent -text $cent -font $buff
+	button .spec.pound -text $pound -font $buff
+	button .spec.sect -text $sect -font $buff
+	button .spec.copy -text $copy -font $buff
+	button .spec.reg -text $reg -font $buff
+	button .spec.para -text $para -font $buff
+	button .spec.plusmn -text $plusmn -font $buff
+	button .spec.frac14 -text $frac14 -font $buff
+	button .spec.frac12 -text $frac12 -font $buff
+	button .spec.frac34 -text $frac34 -font $buff
+	button .spec.iquest -text $iquest -font $buff
+	button .spec.bigagrave -text $bigagrave -font $buff
+	button .spec.bigaacute -text $bigaacute -font $buff
+	button .spec.bigacirc -text $bigacirc -font $buff
+	button .spec.bigatilde -text $bigatilde -font $buff
+	button .spec.bigauml -text $bigauml -font $buff
+	button .spec.bigaelig -text $bigaelig -font $buff
+	button .spec.bigccedil -text $bigccedil -font $buff
+	button .spec.bigegrave -text $bigegrave -font $buff
+	button .spec.bigeacute -text $bigeacute -font $buff
+	button .spec.bigecirc -text $bigecirc -font $buff
+	button .spec.bigeuml -text $bigeuml -font $buff
+	button .spec.bigiacute -text $bigiacute -font $buff
+	button .spec.bigicirc -text $bigicirc -font $buff
+	button .spec.bigiuml -text $bigiuml -font $buff
+	button .spec.bigntilde -text $bigntilde -font $buff
+	button .spec.bigoacute -text $bigoacute -font $buff
+	button .spec.bigocirc -text $bigocirc -font $buff
+	button .spec.bigouml -text $bigouml -font $buff
+	button .spec.bigoslash -text $bigoslash -font $buff
+	button .spec.biguacute -text $biguacute -font $buff
+	button .spec.bigucirc -text $bigucirc -font $buff
+	button .spec.biguuml -text $biguuml -font $buff
+	button .spec.szlig -text $szlig -font $buff
+	button .spec.agrave -text $agrave -font $buff
+	button .spec.aacute -text $aacute -font $buff
+	button .spec.acirc -text $acirc -font $buff
+	button .spec.atilde -text $atilde -font $buff
+	button .spec.auml -text $auml -font $buff
+	button .spec.aelig -text $aelig -font $buff
+	button .spec.ccedil -text $ccedil -font $buff
+	button .spec.egrave -text $egrave -font $buff
+	button .spec.eacute -text $eacute -font $buff
+	button .spec.ecirc -text $ecirc -font $buff
+	button .spec.euml -text $euml -font $buff
+	button .spec.iacute -text $iacute -font $buff
+	button .spec.icirc -text $icirc -font $buff
+	button .spec.iuml -text $iuml -font $buff
+	button .spec.ntilde -text $ntilde -font $buff
+	button .spec.oacute -text $oacute -font $buff
+	button .spec.ocirc -text $ocirc -font $buff
+	button .spec.ouml -text $ouml -font $buff
+	button .spec.oslash -text $oslash -font $buff
+	button .spec.uacute -text $uacute -font $buff
+	button .spec.ucirc -text $ucirc -font $buff
+	button .spec.uuml -text $uuml -font $buff
+	button .spec.close -text "Close" -font $buff -command { destroy .spec }
+	if { [string match $texttype html] } {
+		.spec.amp configure -command { set charo "&amp;" ; putintext }
+		.spec.lt configure -command { set charo "&lt;" ; putintext }
+		.spec.gt configure -command { set charo "&gt;" ; putintext }
+		.spec.iexcl configure -command { set charo "&iexcl;" ; putintext }
+		.spec.cent configure -command { set charo "&cent;" ; putintext }
+		.spec.pound configure -command { set charo "&pound;" ; putintext }
+		.spec.sect configure -command { set charo "&sect;" ; putintext }
+		.spec.copy configure -command { set charo "&copy;" ; putintext }
+		.spec.reg configure -command { set charo "&reg;" ; putintext }
+		.spec.para configure -command { set charo "&para;" ; putintext }
+		.spec.plusmn configure -command { set charo "&plusmn;" ; putintext }
+		.spec.frac14 configure -command { set charo "&frac14;" ; putintext }
+		.spec.frac12 configure -command { set charo "&frac12;" ; putintext }
+		.spec.frac34 configure -command { set charo "&frac34;" ; putintext }
+		.spec.iquest configure -command { set charo "&iquest;" ; putintext }
+		.spec.bigagrave configure -command { set charo "&Agrave;" ; putintext }
+		.spec.bigaacute configure -command { set charo "&Aacute;" ; putintext }
+		.spec.bigacirc configure -command { set charo "&Acirc;" ; putintext }
+		.spec.bigatilde configure -command { set charo "&Atilde;" ; putintext }
+		.spec.bigauml configure -command { set charo "&Auml;" ; putintext }
+		.spec.bigaelig configure -command { set charo "&AElig;" ; putintext }
+		.spec.bigccedil configure -command { set charo "&Ccedil;" ; putintext }
+		.spec.bigegrave configure -command { set charo "&Egrave;" ; putintext }
+		.spec.bigeacute configure -command { set charo "&Eacute;" ; putintext }
+		.spec.bigecirc configure -command { set charo "&Ecirc;" ; putintext }
+		.spec.bigeuml configure -command { set charo "&Euml;" ; putintext }
+		.spec.bigiacute configure -command { set charo "&Iacute;" ; putintext }
+		.spec.bigicirc configure -command { set charo "&Icirc;" ; putintext }
+		.spec.bigiuml configure -command { set charo "&Iuml;" ; putintext }
+		.spec.bigntilde configure -command { set charo "&Ntilde;" ; putintext }
+		.spec.bigoacute configure -command { set charo "&Oacute;" ; putintext }
+		.spec.bigocirc configure -command { set charo "&Ocirc;" ; putintext }
+		.spec.bigouml configure -command { set charo "&Ouml;" ; putintext }
+		.spec.bigoslash configure -command { set charo "&Oslash;" ; putintext }
+		.spec.biguacute configure -command { set charo "&Uacute;" ; putintext }
+		.spec.bigucirc configure -command { set charo "&Ucirc;" ; putintext }
+		.spec.biguuml configure -command { set charo "&Uuml;" ; putintext }
+		.spec.szlig configure -command { set charo "&szlig;" ; putintext }
+		.spec.agrave configure -command { set charo "&agrave;" ; putintext }
+		.spec.aacute configure -command { set charo "&aacute;" ; putintext }
+		.spec.acirc configure -command { set charo "&acirc;" ; putintext }
+		.spec.atilde configure -command { set charo "&atilde;" ; putintext }
+		.spec.auml configure -command { set charo "&auml;" ; putintext }
+		.spec.aelig configure -command { set charo "&aelig;" ; putintext }
+		.spec.ccedil configure -command { set charo "&ccedil;" ; putintext }
+		.spec.egrave configure -command { set charo "&egrave;" ; putintext }
+		.spec.eacute configure -command { set charo "&eacute;" ; putintext }
+		.spec.ecirc configure -command { set charo "&ecirc;"	; putintext }
+		.spec.euml configure -command { set charo "&euml;" ; putintext }
+		.spec.iacute configure -command { set charo "&iacute;" ; putintext }
+		.spec.icirc configure -command { set charo "&icirc;" ; putintext }
+		.spec.iuml configure -command { set charo "&iuml;" ; putintext }
+		.spec.ntilde configure -command { set charo "&ntilde;" ; putintext }
+		.spec.oacute configure -command { set charo "&oacute;" ; putintext }
+		.spec.ocirc configure -command { set charo "&ocirc;" ; putintext }
+		.spec.ouml configure -command { set charo "&ouml;" ; putintext }
+		.spec.oslash configure -command { set charo "&oslash;" ; putintext }
+		.spec.uacute configure -command { set charo "&uacute;" ; putintext }
+		.spec.ucirc configure -command { set charo "&ucirc;" ; putintext }
+		.spec.uuml configure -command { set charo "&uuml;" ; putintext }
+	} else {
+		.spec.amp configure -command { set charo $amp ; putintext }
+		.spec.lt configure -command { set charo $lt ; putintext }
+		.spec.gt configure -command { set charo $gt ; putintext }
+		.spec.iexcl configure -command { set charo $iexcl ; putintext }
+		.spec.cent configure -command { set charo $cent ; putintext }
+		.spec.pound configure -command { set charo $pound ; putintext }
+		.spec.sect configure -command { set charo $sect ; putintext }
+		.spec.copy configure -command { set charo $copy ; putintext }
+		.spec.reg configure -command { set charo $reg ; putintext }
+		.spec.para configure -command { set charo $para ; putintext }
+		.spec.plusmn configure -command { set charo $plusmn ; putintext }
+		.spec.frac14 configure -command { set charo $frac14 ; putintext }
+		.spec.frac12 configure -command { set charo $frac12 ; putintext }
+		.spec.frac34 configure -command { set charo $frac34 ; putintext }
+		.spec.iquest configure -command { set charo $iquest ; putintext }
+		.spec.bigagrave configure -command { set charo $bigagrave ; putintext }
+		.spec.bigaacute configure -command { set charo $bigaacute ; putintext }
+		.spec.bigacirc configure -command { set charo $bigacirc ; putintext }
+		.spec.bigatilde configure -command { set charo $bigatilde ; putintext }
+		.spec.bigauml configure -command { set charo $bigauml ; putintext }
+		.spec.bigaelig configure -command { set charo $bigaelig ; putintext }
+		.spec.bigccedil configure -command { set charo $bigccedil ; putintext }
+		.spec.bigegrave configure -command { set charo $bigegrave ; putintext }
+		.spec.bigeacute configure -command { set charo $bigeacute ; putintext }
+		.spec.bigecirc configure -command { set charo $bigecirc ; putintext }
+		.spec.bigeuml configure -command { set charo $bigeuml ; putintext }
+		.spec.bigiacute configure -command { set charo $bigiacute ; putintext }
+		.spec.bigicirc configure -command { set charo $bigicirc ; putintext }
+		.spec.bigiuml configure -command { set charo $bigiuml ; putintext }
+		.spec.bigntilde configure -command { set charo $bigntilde ; putintext }
+		.spec.bigoacute configure -command { set charo $bigoacute ; putintext }
+		.spec.bigocirc configure -command { set charo $bigocirc ; putintext }
+		.spec.bigouml configure -command { set charo $bigouml ; putintext }
+		.spec.bigoslash configure -command { set charo $bigoslash ; putintext }
+		.spec.biguacute configure -command { set charo $biguacute ; putintext }
+		.spec.bigucirc configure -command { set charo $bigucirc ; putintext }
+		.spec.biguuml configure -command { set charo $biguuml ; putintext }
+		.spec.szlig configure -command { set charo $szlig ; putintext }
+		.spec.agrave configure -command { set charo $agrave ; putintext }
+		.spec.aacute configure -command { set charo $aacute ; putintext }
+		.spec.acirc configure -command { set charo $acirc ; putintext }
+		.spec.atilde configure -command { set charo $atilde ; putintext }
+		.spec.auml configure -command { set charo $auml ; putintext }
+		.spec.aelig configure -command { set charo $aelig ; putintext }
+		.spec.ccedil configure -command { set charo $ccedil ; putintext }
+		.spec.egrave configure -command { set charo $egrave ; putintext }
+		.spec.eacute configure -command { set charo $eacute ; putintext }
+		.spec.ecirc configure -command { set charo $ecirc	; putintext }
+		.spec.euml configure -command { set charo $euml ; putintext }
+		.spec.iacute configure -command { set charo $iacute ; putintext }
+		.spec.icirc configure -command { set charo $icirc ; putintext }
+		.spec.iuml configure -command { set charo $iuml ; putintext }
+		.spec.ntilde configure -command { set charo $ntilde ; putintext }
+		.spec.oacute configure -command { set charo $oacute ; putintext }
+		.spec.ocirc configure -command { set charo $ocirc ; putintext }
+		.spec.ouml configure -command { set charo $ouml ; putintext }
+		.spec.oslash configure -command { set charo $oslash ; putintext }
+		.spec.uacute configure -command { set charo $uacute ; putintext }
+		.spec.ucirc configure -command { set charo $ucirc ; putintext }
+		.spec.uuml configure -command { set charo $uuml ; putintext }
+	}
+	grid config .spec.amp -row 0  -column 0  -sticky news
+	grid config .spec.lt -row 0  -column 1  -sticky news
+	grid config .spec.gt -row 0  -column 2  -sticky news
+	grid config .spec.iexcl -row 0  -column 3  -sticky news
+	grid config .spec.cent -row 0  -column 4  -sticky news
+	grid config .spec.pound -row 0  -column 5  -sticky news
+	grid config .spec.sect -row 0  -column 6  -sticky news
+	grid config .spec.copy -row 0  -column 7  -sticky news
+	grid config .spec.reg -row 0  -column 8  -sticky news
+	grid config .spec.para -row 1  -column 0  -sticky news
+	grid config .spec.plusmn -row 1  -column 1  -sticky news
+	grid config .spec.frac14 -row 1  -column 2  -sticky news
+	grid config .spec.frac12 -row 1  -column 3  -sticky news
+	grid config .spec.frac34 -row 1  -column 4  -sticky news
+	grid config .spec.iquest -row 1  -column 5  -sticky news
+	grid config .spec.bigagrave -row 1  -column 6  -sticky news
+	grid config .spec.bigaacute -row 1  -column 7  -sticky news
+	grid config .spec.bigacirc -row 1  -column 8  -sticky news
+	grid config .spec.bigatilde -row 2  -column 0  -sticky news
+	grid config .spec.bigauml -row 2  -column 1  -sticky news
+	grid config .spec.bigaelig -row 2  -column 2  -sticky news
+	grid config .spec.bigccedil -row 2  -column 3  -sticky news
+	grid config .spec.bigegrave -row 2  -column 4  -sticky news
+	grid config .spec.bigeacute -row 2  -column 5  -sticky news
+	grid config .spec.bigecirc -row 2  -column 6  -sticky news
+	grid config .spec.bigeuml -row 2  -column 7  -sticky news
+	grid config .spec.bigiacute -row 2  -column 8  -sticky news
+	grid config .spec.bigicirc -row 3  -column 0  -sticky news
+	grid config .spec.bigiuml -row 3  -column 1  -sticky news
+	grid config .spec.bigntilde -row 3  -column 2  -sticky news
+	grid config .spec.bigoacute -row 3  -column 3  -sticky news
+	grid config .spec.bigocirc -row 3  -column 4  -sticky news
+	grid config .spec.bigouml -row 3  -column 5  -sticky news
+	grid config .spec.bigoslash -row 3  -column 6  -sticky news
+	grid config .spec.biguacute -row 3  -column 7  -sticky news
+	grid config .spec.bigucirc -row 3  -column 8  -sticky news
+	grid config .spec.biguuml -row 4  -column 0  -sticky news
+	grid config .spec.szlig -row 4  -column 1  -sticky news
+	grid config .spec.agrave -row 4  -column 2  -sticky news
+	grid config .spec.aacute -row 4  -column 3  -sticky news
+	grid config .spec.acirc -row 4  -column 4  -sticky news
+	grid config .spec.atilde -row 4  -column 5  -sticky news
+	grid config .spec.auml -row 4  -column 6  -sticky news
+	grid config .spec.aelig -row 4  -column 7  -sticky news
+	grid config .spec.ccedil -row 4  -column 8  -sticky news
+	grid config .spec.egrave -row 5  -column 0  -sticky news
+	grid config .spec.eacute -row 5  -column 1  -sticky news
+	grid config .spec.ecirc -row 5  -column 2  -sticky news
+	grid config .spec.euml -row 5  -column 3  -sticky news
+	grid config .spec.iacute -row 5  -column 4  -sticky news
+	grid config .spec.icirc -row 5  -column 5  -sticky news
+	grid config .spec.iuml -row 5  -column 6  -sticky news
+	grid config .spec.ntilde -row 5  -column 7  -sticky news
+	grid config .spec.oacute -row 5  -column 8  -sticky news
+	grid config .spec.ocirc -row 6  -column 0  -sticky news
+	grid config .spec.ouml -row 6  -column 1  -sticky news
+	grid config .spec.oslash -row 6  -column 2  -sticky news
+	grid config .spec.uacute -row 6  -column 3  -sticky news
+	grid config .spec.ucirc -row 6  -column 4  -sticky news
+	grid config .spec.uuml -row 6  -column 5  -sticky news
+	grid config .spec.close -row 6  -column 6 -columnspan 3 -sticky news
+}
+
+# Special -- HTML
+
+.filemenu.special add command -label "HTML" -underline 0 -command {
+	if { [string match $texttype plain] } { set texttype html }
+	specialbox
+}
+
+# Special -- Plain Text
+
+.filemenu.special add command -label "Plain Text" -underline 6 -command {
+	if { [string match $texttype html] } { set texttype plain }
+	specialbox
+}
+
+.filemenu.special add separator
+
+# Special -- Color
+
+.filemenu.special add command -label "Color" -underline 0 -command colorbox
+
+# Procedure for setting up color selection box:
+# RGB Color-setting Scale
+# from Graphical Applications with Tcl and Tk, 2nd edition, Chapter 3
+# by Eric Foster-Johnson
+# slightly modified by David McClamrock
+
+proc colorbox {} {
+	# Set variables for red, green, blue, color selected,
+	# and hexadecimal code color; set background
+	# (number 128 will be midpoint of color scale):
+	toplevel .colorbox
+	wm title .colorbox "Select a Color"
+	global red green blue color hex rowcolor cellcolor colorcall
+	set red 255
+	set green 204
+	set blue 153
+	set color ""
+	set hex black
+	tk_setPalette background bisque selectBackground cyan
+
+	# Make a button to show the color selected:
+	button .colorbox.color -textvariable color -borderwidth 10 \
+		-pady 10 -padx 52 -command { 
+			.textinhere insert insert \"[.colorbox.color cget -text]\"
+			focus .textinhere
+	}
+	grid config .colorbox.color -row 0  -column 1 \
+		-columnspan 2 -sticky news
+
+	# Establish a procedure for changing the color selected:
+	proc modify_color { which_color value } {
+		global color red green blue
+		switch $which_color {
+			red { set red $value }
+			green { set green $value }
+			blue { set blue $value }
+		}
+		if { [expr $red + $green + $blue < 480] && \
+			[expr $green < 180] } then {
+			set hex white
+		} else {
+			set hex black
+		}
+
+		set color [format "#%2.2X%2.2X%2.2X" \
+			$red $green $blue]
+		.colorbox.color configure -background $color \
+			-foreground $hex
+	}
+
+	# Make a sliding scale to change the amount of red;
+	# show numbers at interval of 64
+	label .colorbox.reddo -text "Red"
+	scale .colorbox.red -from 0 -to 255 -length 300 -orient horizontal \
+		-command "modify_color red" -tickinterval 64
+	.colorbox.red set $red
+	grid config .colorbox.reddo -row 1  -column 0  -sticky news
+	grid config .colorbox.red -row 1  -column 1 -columnspan 4 -sticky news
+
+	# Do the same for green and blue:
+	label .colorbox.greeno -text "Green"
+	scale .colorbox.green -from 0 -to 255 -length 300 -orient horizontal \
+		-command "modify_color green" -tickinterval 64
+	.colorbox.green set $green
+	grid config .colorbox.greeno -row 2  -column 0  -sticky news
+	grid config .colorbox.green -row 2  -column 1  -columnspan 4 -sticky news
+
+	label .colorbox.bluey -text "Blue"
+	scale .colorbox.blue -from 0 -to 255 -length 300 -orient horizontal \
+		-command "modify_color blue" -tickinterval 64
+	.colorbox.blue set $blue
+	grid config .colorbox.bluey -row 3  -column 0  -sticky news
+	grid config .colorbox.blue -row 3  -column 1  -columnspan 4 -sticky news
+
+	# Make a button to close the color selection box:
+	button .colorbox.close -text "Close" -borderwidth 10 \
+		-default active -command {
+			if { [string match $colorcall row] }	{	set rowcolor $color }
+			if { [string match $colorcall cell] } { set cellcolor $color }
+			destroy .colorbox
+	}
+	grid config .colorbox.close -row 4  -column 1 -columnspan 2 -sticky news
+}

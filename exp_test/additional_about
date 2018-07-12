@@ -1,0 +1,6 @@
+"WISH Supernotepad $version\n\
+                        by David McClamrock\n <mcclamrock@locl.net>\n\n\
+                        Based on Tk NotePad 0.5.0\n by Joseph Acosta\n\
+                        and \"textedit.tcl\"\n by Eric Foster-Johnson\n"\
+                        -title "About WISH Supernotepad" -type ok
+
