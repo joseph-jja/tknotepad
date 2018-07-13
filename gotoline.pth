@@ -30,3 +30,13 @@ proc gotoline {} {
          destroy $prnt
     }
 }
+
+# here we see if the user passed the gl option and set the line numer
+# we also check to see if we need to set the key position
+# however if the user did not include line number patch we must catch the error
+# of calling a function that may not exist
+if { 0 != $gotolinenumber } {
+	textSetCursor "$gotolinenumber.0"
+		 catch { keyposn } {} 
+}
+

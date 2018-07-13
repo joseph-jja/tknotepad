@@ -1,0 +1,48 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec `which wish` "$0" "$@"
+
+global .
+
+# create the basic window stuff here
+eval destroy [ winfo child . ] 	
+wm title . "Tk Keypad"
+#wm geometry . 200x250
+ 
+# set up a basic entry widget
+#entry .visdisp -textvariable total
+#pack .visdisp 
+
+#entry .totals -textvariable runningbal
+#pack .totals 
+
+# configure the widget here
+#.visdisp configure -state disabled
+#.totals configure -state disabled
+
+set total 0
+set runningbal 0
+set curopr ""
+
+set buttonlist [ list "tab" "q" "w" "e" "r" "t" "y" "u" "i" "o" "p"  ]
+lappend buttonlist "a" "s" "d" "f" "g" "h" "j" "k" "l" ";" "'"
+lappend buttonlist "z" "x" "c" "v" "b" "n" "m" "," "." "/" "l"
+
+set listlen [ llength $buttonlist ]
+
+for { set i 0 } { $i < $listlen } { incr i 11 } {
+    frame .frame_$i 
+    pack .frame_$i -side top -expand 1 -fill both
+    for { set p 0 } { $p < 11 } { incr p 1 } {
+           set j [ lindex $buttonlist [ expr $i + $p ] ]
+	   puts $j
+           button .$p.$j -text $j   
+    #       #button .$p -text $j   # -command "do_to_entry $j"
+    #       pack .$p -in .frame_$i -side left -expand 1 -fill both
+    }
+}
+
+proc do_to_entry { i } {
+     puts $i
+}
+

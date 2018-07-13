@@ -1,0 +1,133 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec `which tclsh` "$0" "$@"
+
+set MESSAGE_DATA ""
+
+set POPSERVER "pop.mindspring.com"
+set POPPORT 110
+set POPUSER "joeja"
+set POPPASS "24bigone"
+#set POPSERVER "mail.mccue.com"
+#set POPPORT 110
+#set POPUSER "joea"
+#set POPPASS "tzuds0"
+
+proc read_till_eod { sock } {
+	global MESSAGE_DATA
+	gets $sock data
+	set MESSAGE_DATA "$data" 
+	while { [ expr [ string compare "$data" "." ] != 0 ] } {
+		gets $sock data
+		set MESSAGE_DATA "$MESSAGE_DATA\n$data"
+	}
+}
+
+proc send_recv { sock msgdata } {
+	global MESSAGE_DATA
+	puts $sock "$msgdata"
+	flush $sock
+	gets $sock data
+	set MESSAGE_DATA "$data" 
+}
+
+set sock  [ socket $POPSERVER $POPPORT ]
+ 
+gets $sock data
+puts $data
+
+send_recv $sock "USER $POPUSER"
+puts $MESSAGE_DATA
+
+send_recv  $sock "PASS $POPPASS"
+puts $MESSAGE_DATA
+
+# this is the has before the number of messages 
+set msgno [ expr [ string first "has" "$MESSAGE_DATA" ] + 4 ] 
+
+# this is the messages 
+set msgnoend [ expr [ string first "messages
+#!/bin/sh
+# the next line restarts using wish \
+exec `which tclsh` "$0" "$@"
+
+set MESSAGE_DATA ""
+
+set POPSERVER "pop.mindspring.com"
+set POPPORT 110
+set POPUSER "joeja"
+set POPPASS "24bigone"
+#set POPSERVER "mail.mccue.com"
+#set POPPORT 110
+#set POPUSER "joea"
+#set POPPASS "tzuds0"
+
+proc read_till_eod { sock } {
+	global MESSAGE_DATA
+	gets $sock data
+	set MESSAGE_DATA "$data" 
+	while { [ expr [ string compare "$data" "." ] != 0 ] } {
+		gets $sock data
+		set MESSAGE_DATA "$MESSAGE_DATA\n$data"
+	}
+}
+
+proc send_recv { sock msgdata } {
+	global MESSAGE_DATA
+	puts $sock "$msgdata"
+	flush $sock
+	gets $sock data
+	set MESSAGE_DATA "$data" 
+}
+
+set sock  [ socket $POPSERVER $POPPORT ]
+ 
+gets $sock data
+puts $data
+
+send_recv $sock "USER $POPUSER"
+puts $MESSAGE_DATA
+
+send_recv  $sock "PASS $POPPASS"
+puts $MESSAGE_DATA
+
+# this is the has before the number of messages 
+set msgno [ expr [ string first "has" "$MESSAGE_DATA" ] + 4 ] 
+
+# this is the messages 
+set msgnoend [ expr [ string first "messages" "$MESSAGE_DATA" ] - 2 ]
+
+set msgnum [ string range $MESSAGE_DATA $msgno $msgnoend ] 
+
+if { $argc > 1 } { 
+	set msgnumber  [lindex $argv 0 ]
+	if [ expr [ string compare "$msgnumber" "del" ] == 0 ] { 
+		set msgdel  [lindex $argv 1 ]
+		puts "DELE $msgdel"
+		send_recv $sock "DELE $msgdel"
+		puts $MESSAGE_DATA
+	} else {
+		if [ expr [ string compare "$msgnumber" "show" ] == 0 ] { 
+			set msgdel  [lindex $argv 1 ]
+			puts "RETR $msgdel"
+			puts $sock "RETR $msgdel"
+			flush $sock
+			read_till_eod $sock
+			puts $MESSAGE_DATA
+		}
+	}
+} else { 
+	for { set i 1 } { $i<=$msgnum } { incr i } {
+		puts $sock "TOP $i 0"
+		flush $sock
+		read_till_eod $sock
+		puts $MESSAGE_DATA
+	}
+}
+
+puts $sock "QUIT"
+flush $sock
+close $sock
+
+exit
+

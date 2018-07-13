@@ -1,0 +1,341 @@
+######################################################
+set retdata ""
+set MAILPORT 25
+set MAILSERVER ""
+set MAILFROM ""
+
+proc send_recv {sock data } {
+	global retdata
+	puts $sock "$data"
+	flush $sock
+	gets $sock retdata
+} 
+
+proc send_message { sock message_data } {
+	# total length of data
+	set LEN [ string length "$message_data" ]
+
+	# number of chunks that we will need to send
+	set CHUNK_COUNT [ expr { $LEN / 998 } ]
+
+	# size of last chunk
+	set LAST_CHUNK [ expr { $LEN % 998 } ] 
+
+	if { $CHUNK_COUNT > 0 } {
+		set START 0
+		for { set i 0 } { $i < $CHUNK_COUNT } { incr i } {
+			set END [ expr { $START + 998 } ]
+			set send_string [ string range "$message_data" $START $END ] 
+			puts $sock "$send_string"
+			set START [ expr { $START + 998 } ]
+		}
+	}
+
+	if { $LAST_CHUNK > 0 } {
+		puts $sock "$message_data"
+	}
+}
+
+proc sendmsg {mailserver mailfrom mailto mailsubject mailmsg} {
+	global retdata MAILPORT
+
+	# connect to the system
+	set sock  [ socket $mailserver $MAILPORT ]    
+	gets $sock data
+a
+
+	# send the hello command 
+    	send_recv $sock "HELO localhost"
+
+	# send mail from 
+    	send_recv $sock "MAIL FROM: <$mailfrom>"
+
+	# send who this is to
+	send_recv $sock "RCPT TO: <$mailto>"
+	
+	# send data command
+	send_recv $sock "DATA"
+
+	# send message header
+	puts $sock "From: $mailfrom"
+	puts $sock "To: $mailto"
+	puts $sock "Subject: $mailsubject"
+
+	# call message sending routine
+	send_message $sock $mailmsg
+
+	# signal end of data
+	send_recv $sock "."
+	
+	# quit
+	puts $sock "QUIT"
+	flush $sock
+
+	close $sock
+}
+
+proc verify_email { emailaddr } {
+
+	if { [ expr [ string first "@" "$emailaddr" ] ] > 0 } {
+		return 1
+	}
+	return 0
+}
+
+proc processmessage { mailwindow } {
+
+	set mailserver [ $mailwindow.mailwinms get ]
+	set mailfrom [ $mailwindow.mailwinmfrom get ]
+	set mailto [ $mailwindow.mailwinmto get ]
+	set mailsubject [ $mailwindow.mailwinmsub get ]
+
+	if { [ expr [ string compare "$mailserver" "" ] ] == 0 } { 
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus
+s $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailfrom" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailto" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailsubject" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow 	 	
+	} else {	
+		if { [ verify_email  $mailto ] && [ verify_email  $mailfrom ] } {
+			set message [ .textarea get 0.0 end ]
+			sendmsg $mailserver $mailfrom $mailto $mailsubject "$message" 
+			destroy $mailwindow	
+		} else { 
+			tk_messageBox -title "ERROR" -type ok -message "Bad email address"
+			focus $mailwindow
+			grab $mailwindow 	 	
+		}
+	}
+}
+proc tknsendmail {} {
+	set mailwin .mailwindow
+	catch {destroy $mailwin}
+	toplevel $mailwin -class Dialog
+	wm titl
+le $mailwin "Send e-mail"
+	setwingeom $mailwin
+	if { [winfo viewable [winfo toplevel [ winfo parent $mailwin ]  ]] } {
+     		wm transient $mailwin [ winfo parent $mailwin ] 
+    	}
+	frame $mailwin.top 
+	frame $mailwin.top1
+	frame $mailwin.top2
+	frame $mailwin.top3 	 
+	frame $mailwin.top4 	 
+	frame $mailwin.bottom
+	label $mailwin.labelmto -text "Mail To:        "
+	entry $mailwin.mailwinmto -textvariable mailto -width 40
+	label $mailwin.labelmfrom -text "Mail From:     "
+	entry $mailwin.mailwinmfrom -textvariable MAILFROM -width 40
+	label $mailwin.labelmsub -text "Mail Subject: "
+	entry $mailwin.mailwinmsub -textvariable mailsubject -width 40
+	label $mailwin.labelms -text "Mail Server:   "
+	entry $mailwin.mailwinms -textvariable MAILSERVER -width 40
+	
+	button $mailwin.bottom.ok -text "Send e-mail" -command "processmessage $mailwin"
+	button $mailwin.bottom.cancel -text "Cancel" -command "destroy $mailwin"
+
+	pack $mailwin.top -side top -expand 0 
+	pack $mailwin.bottom -side bottom -expan
+nd 0 
+	pack $mailwin.top1 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top2 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top3 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top4 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.labelmto $mailwin.mailwinmto -in $mailwin.top1 -side left -fill x -fill y
+	pack $mailwin.labelmfrom $mailwin.mailwinmfrom -in $mailwin.top2 -side left -fill x -fill y
+	pack $mailwin.labelmsub $mailwin.mailwinmsub -in $mailwin.top3 -side left -fill x -fill y
+	pack $mailwin.labelms $mailwin.mailwinms -in $mailwin.top4 -side left -fill x -fill y
+	pack $mailwin.bottom.ok $mailwin.bottom.cancel -in $mailwin.bottom -side left -fill x -fill y
+	#bind $mailwin <Return> "addtomailwin $mailwin"
+	#bind $mailwin <Escape> "destroy $mailwin"
+
+	focus $mailwin.mailwinmto
+}
+
+
+menu .filemenu.mail -tearoff 0 -font $menuFont
+.filemenu add cascade -label "Mail" -underline 0 -menu .filemenu.mail
+.filemenu.mail add command -label "Send Email" -underline 0 -command
+
+######################################################
+set retdata ""
+set MAILPORT 25
+set MAILSERVER ""
+set MAILFROM ""
+
+proc send_recv {sock data } {
+	global retdata
+	puts $sock "$data"
+	flush $sock
+	gets $sock retdata
+} 
+
+proc send_message { sock message_data } {
+	# total length of data
+	set LEN [ string length "$message_data" ]
+
+	# number of chunks that we will need to send
+	set CHUNK_COUNT [ expr { $LEN / 998 } ]
+
+	# size of last chunk
+	set LAST_CHUNK [ expr { $LEN % 998 } ] 
+
+	if { $CHUNK_COUNT > 0 } {
+		set START 0
+		for { set i 0 } { $i < $CHUNK_COUNT } { incr i } {
+			set END [ expr { $START + 998 } ]
+			set send_string [ string range "$message_data" $START $END ] 
+			puts $sock "$send_string"
+			set START [ expr { $START + 998 } ]
+		}
+	}
+
+	if { $LAST_CHUNK > 0 } {
+		puts $sock "$message_data"
+	}
+}
+
+proc sendmsg {mailserver mailfrom mailto mailsubject mailmsg} {
+	global retdata MAILPORT
+
+	# connect to the system
+	set sock  [ socket $mailserver $MAILPORT ]    
+	gets $sock data
+
+	# send the hello command 
+    	send_recv $sock "HELO localhost"
+
+	# send mail from 
+    	send_recv $sock "MAIL FROM: <$mailfrom>"
+
+	# send who this is to
+	send_recv $sock "RCPT TO: <$mailto>"
+	
+	# send data command
+	send_recv $sock "DATA"
+
+	# send message header
+	puts $sock "From: $mailfrom"
+	puts $sock "To: $mailto"
+	puts $sock "Subject: $mailsubject"
+
+	# call message sending routine
+	send_message $sock $mailmsg
+
+	# signal end of data
+	send_recv $sock "."
+	
+	# quit
+	puts $sock "QUIT"
+	flush $sock
+
+	close $sock
+}
+
+proc verify_email { emailaddr } {
+
+	if { [ expr [ string first "@" "$emailaddr" ] ] > 0 } {
+		return 1
+	}
+	return 0
+}
+
+proc processmessage { mailwindow } {
+
+	set mailserver [ $mailwindow.mailwinms get ]
+	set mailfrom [ $mailwindow.mailwinmfrom get ]
+	set mailto [ $mailwindow.mailwinmto get ]
+	set mailsubject [ $mailwindow.mailwinmsub get ]
+
+	if { [ expr [ string compare "$mailserver" "" ] ] == 0 } { 
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailfrom" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailto" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow
+	} elseif { [ expr [ string compare "$mailsubject" "" ] ] == 0 } {
+		tk_messageBox -title "ERROR" -type ok -message "Missing Data"
+		focus $mailwindow
+		grab $mailwindow 	 	
+	} else {	
+		if { [ verify_email  $mailto ] && [ verify_email  $mailfrom ] } {
+			set message [ .textarea get 0.0 end ]
+			sendmsg $mailserver $mailfrom $mailto $mailsubject "$message" 
+			destroy $mailwindow	
+		} else { 
+			tk_messageBox -title "ERROR" -type ok -message "Bad email address"
+			focus $mailwindow
+			grab $mailwindow 	 	
+		}
+	}
+}
+proc tknsendmail {} {
+	set mailwin .mailwindow
+	catch {destroy $mailwin}
+	toplevel $mailwin -class Dialog
+	wm title $mailwin "Send e-mail"
+	setwingeom $mailwin
+	if { [winfo viewable [winfo toplevel [ winfo parent $mailwin ]  ]] } {
+     		wm transient $mailwin [ winfo parent $mailwin ] 
+    	}
+	frame $mailwin.top 
+	frame $mailwin.top1
+	frame $mailwin.top2
+	frame $mailwin.top3 	 
+	frame $mailwin.top4 	 
+	frame $mailwin.bottom
+	label $mailwin.labelmto -text "Mail To:        "
+	entry $mailwin.mailwinmto -textvariable mailto -width 40
+	label $mailwin.labelmfrom -text "Mail From:     "
+	entry $mailwin.mailwinmfrom -textvariable MAILFROM -width 40
+	label $mailwin.labelmsub -text "Mail Subject: "
+	entry $mailwin.mailwinmsub -textvariable mailsubject -width 40
+	label $mailwin.labelms -text "Mail Server:   "
+	entry $mailwin.mailwinms -textvariable MAILSERVER -width 40
+	
+	button $mailwin.bottom.ok -text "Send e-mail" -command "processmessage $mailwin"
+	button $mailwin.bottom.cancel -text "Cancel" -command "destroy $mailwin"
+
+	pack $mailwin.top -side top -expand 0 
+	pack $mailwin.bottom -side bottom -expand 0 
+	pack $mailwin.top1 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top2 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top3 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.top4 -side top -expand 0 -in $mailwin.top
+	pack $mailwin.labelmto $mailwin.mailwinmto -in $mailwin.top1 -side left -fill x -fill y
+	pack $mailwin.labelmfrom $mailwin.mailwinmfrom -in $mailwin.top2 -side left -fill x -fill y
+	pack $mailwin.labelmsub $mailwin.mailwinmsub -in $mailwin.top3 -side left -fill x -fill y
+	pack $mailwin.labelms $mailwin.mailwinms -in $mailwin.top4 -side left -fill x -fill y
+	pack $mailwin.bottom.ok $mailwin.bottom.cancel -in $mailwin.bottom -side left -fill x -fill y
+	#bind $mailwin <Return> "addtomailwin $mailwin"
+	#bind $mailwin <Escape> "destroy $mailwin"
+
+	focus $mailwin.mailwinmto
+}
+
+
+menu .filemenu.mail -tearoff 0 -font $menuFont
+.filemenu add cascade -label "Mail" -underline 0 -menu .filemenu.mail
+.filemenu.mail add command -label "Send Email" -underline 0 -command "tknsendmail"
+
+
+
+

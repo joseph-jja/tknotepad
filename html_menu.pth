@@ -1,0 +1,35 @@
+# some of this code was taken from supernotepad
+# which was based on
+# by David McClamrock <mcclamrock@locl.net>
+# based on Tk NotePad 0.5.0 by Joseph Acosta
+# and "textedit.tcl" by Eric Foster-Johnson
+# with help from Eric Foster-Johnson,
+# Graphical Applications with Tcl & Tk (2nd edition)
+# and Christopher Nelson, Tcl/Tk Programmer's Reference
+
+# Copyright © 2001 David H. McClamrock
+# Freely available under Maximum Use License for Everyone
+# no idea what that is
+
+# HTML menu
+menu .filemenu.html -tearoff 0 -font $menuFont
+.filemenu add cascade -label "HTML" -underline 0 -menu .filemenu.html
+
+.filemenu.html add command -label "New HTML" -underline 0 -command "newhtml"
+
+proc insertNewHTMLText {} {
+	setTextTitleAsNew
+
+	.textarea insert 1.0 "<html>\n<head>\n\n<title>\
+		\n<!--Document title (to be displayed on title bar of browser) goes in\
+		space below>\n\n\n\n</title>\n</HEAD>\n\n<body>\n\
+		\n<!--Contents of document (to be displayed in main browser\
+		window) go in space below>\n\n\n\n</body>\n</html>"
+	
+	textSetCursor "1.0"
+	keyposn
+}
+
+proc newhtml {} {
+	switchcase filetosave insertNewHTMLText
+}

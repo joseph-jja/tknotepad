@@ -1,0 +1,60 @@
+# regles pour le highlighting
+
+# .textarea tag configure red -foreground red
+# ::markup::addRule .textarea red -tag red
+
+# for
+.textarea tag configure Pour -foreground blue
+::markup::addRule .textarea Pour -tag Pour
+
+# if
+.textarea tag configure Si -foreground blue
+::markup::addRule .textarea Si -tag Si
+
+# else
+.textarea tag configure Sinon -foreground blue
+::markup::addRule .textarea Sinon -tag Sinon
+
+# elseif
+.textarea tag configure SinonSi -foreground blue
+::markup::addRule .textarea "Sinon si" -tag SinonSi
+
+# fin si
+.textarea tag configure FinSi -foreground blue
+::markup::addRule .textarea "Fin si" -tag FinSi
+
+# switch
+.textarea tag configure Cas -foreground blue
+::markup::addRule .textarea "Cas ou" -tag Cas
+
+# cas:
+.textarea tag configure cas -foreground blue
+::markup::addRule .textarea "cas: " -tag cas
+
+# defaut:
+.textarea tag configure Defaut -foreground blue
+::markup::addRule .textarea "defaut: " -tag Defaut
+
+# vaut
+.textarea tag configure vaut -foreground blue
+::markup::addRule .textarea vaut -tag vaut
+
+# alors
+.textarea tag configure alors -foreground blue
+::markup::addRule .textarea alors -tag alors
+
+# Debut
+.textarea tag configure Debut -foreground blue
+::markup::addRule .textarea Debut -tag Debut
+
+# Fin
+.textarea tag configure Fin -foreground blue
+::markup::addRule .textarea Fin -tag Fin
+
+# err
+.textarea tag configure Err -foreground red
+::markup::addRule .textarea "err: " -tag Err
+
+
+
+

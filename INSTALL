@@ -1,34 +1,28 @@
 This file describes how to install tknotepad under windows 95/98 and under Linux:
 
-It is assumed that Tcl 8.0 and tk8.0 or greater have been already installed on your system. These 
-libraries are failry standard on most linux distributions (Slackware 3.4 or later RH5.0 or later).
+It is assumed that Tcl 8.4 and tk8.4 or greater have been already installed on your system. These libraries are failry standard on most linux distributions (Fedora Core 8) 
    
-You can obtain the Tcl/Tk libraries from http://www.scriptics.com . As of the time of this writing they 
-are free.
+You can obtain the Tcl/Tk libraries from http://www.tcl.tk. As the time of this writing they are free.
 
-Read the installation of Tcl/Tk for your operating system, as that is beyond the scope of this 
-document.
+Read the installation of Tcl/Tk for your operating system, as that is beyond the scope of this document.
 
 
 Line numbering:
 ---------------
 
-patch name = linenum.pth
+patch name = INCLUDED in the base code as of 0.8.2
 
-As of version 0.6.9 a special added patch is included for those who want line numbering.
-This is a 'bonus' or 'addition' that I have no intention of making part of the standard 
-distribution so deal with it :-). It is a port of code in one of my other editors.
-It simple adds an entry to the bottom of the window, and puts the line number and column 
-number in the widget. To use this code simply add it to the end of the tknotepad script.
-The code is not perfect yet, as it makes the text widget a little wider, but it does not 
-add to much overhead to the program.
+Originally I had no intention of including this in the base code, however
+in tcl/tk 8.4 they now have unlimited undo/redo build into the base code.
+As such I have been able to remove about 300 lines of code.  As a result of 
+some of the changes in tcl/tk 8.4 I have been able to refactor the code base
+and in about 700 lines I have been able to do the same as the previoud 900 
+lines of code and add a few new features.  
+It simple adds an entry to the bottom of the window, and puts the 
+line number and column number in the widget. 
 
-Also as of 0.7.8 it includes a modified message in the lower left corner
+This also includes a modified message in the lower left corner
 so that when the text is modified it will indicat that it is modified.
-
-Eventually I may have scripts for adding this code both for Windows and *NIX but for now if
-you want this feature it must be added manually.
-
 
 Goto to Line nunmber:
 ---------------------
@@ -45,10 +39,11 @@ the end of the tknotepad script.
 A popup menu:
 -------------
 
-patchname = popup.pth
+patch name = INCLUDED in the base code as of 0.8.2
 
-This patch is now completed but not working the way I expected. It is bound to both Button 2 
-and Button 3, and should be just Button 2. This is a tcl/tk X Windows issue thou.
+This patch is now completed but not working the way I expected. It is bound 
+to both Button 2 and Button 3, and should be just Button 2. This is a 
+tcl/tk X Windows issue thou.
 It shows the Edit popup menu however, and works for me so I am happy with it.
 
 

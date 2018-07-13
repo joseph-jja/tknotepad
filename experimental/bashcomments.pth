@@ -1,0 +1,38 @@
+proc comments {} {
+        set comments green4
+        set win .textarea
+        set si [$win index "insert linestart" ]
+        set en [$win index "insert lineend" ]
+        while {1} {
+                set res [$win search -count length -regexp {^[\t|\s]*\#.*} $si $en]
+                if {$res == ""} {
+                        break
+                }
+                $win tag add comments $res $en
+                set si $en
+        }
+        $win tag configure comments -foreground $comments -font {Helvetica 12}
+}
+
+bind .textarea <KeyRelease> { comments }
+
+proc delete {} {
+	global textFont
+        set win .textarea
+        set si [$win index insert]
+        set en [$win index "insert lineend"]
+        set tag [$win tag names [$win index insert]]
+        if {$tag == "comments"} {
+                set si [$win index insert]
+                set en [$win index "insert lineend"]
+        }
+        foreach tag  {comments} {
+                $win tag remove $tag $si $en
+        }
+}
+
+bind .textarea <Delete> { delete }
+bind .textarea <BackSpace> { delete }
+
+
+

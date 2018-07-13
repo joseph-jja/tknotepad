@@ -3,14 +3,16 @@ This file describes the use of the command line options.
 Th efollowing optinos are allowed:
 
 	-f  	for a new window can be given no argument or a file name
-	-nf 	create a new file, this sets the title to the new file name requires a 
-		file name as an argument     	  
+	-nf 	create a new file, this sets the title to the new file name 
+		requires a file name as an argument     	  
 	-fg  	set the foreground color 
 		should be the first options used if they are used.
 	-bg	set the background color 
 		should be the first options used if they are used.
 	-p 	input data from a pipe, this requires an incoming pipe |
 		if used it shoudl be the last option on the command line
+	-ww	this turns word wrap on by default
+	-gl	this starts the application at a particular line number
 
 See examples below:
 

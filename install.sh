@@ -1,6 +1,6 @@
 #! /bin/sh
 
-LISTOFPATCHES="linenum.pth gotoline.pth popup.pth newwin.pth"
+LISTOFPATCHES="gotoline.pth newwin.pth rpmspec.pth"
 
 INSTALLLIST=""
 

@@ -1,0 +1,10 @@
+#!/bin/sh
+mkdir /usr/local/luix
+mkdir /usr/local/luix/icons
+cp * /usr/local/luix
+cd icons
+cp * /usr/local/luix/icons
+cd ..
+ln -s /usr/local/luix/azul /usr/bin/azul
+
+

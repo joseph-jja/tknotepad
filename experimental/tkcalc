@@ -1,0 +1,155 @@
+#!/bin/sh
+# the next line restarts using wish \
+exec `which wish` "$0" "$@"
+
+global .
+
+# create the basic window stuff here
+eval destroy [ winfo child . ] 	
+wm title . "Tk Calc"
+#wm geometry . 200x250
+ 
+# set up a basic entry widget
+entry .visdisp -textvariable total
+pack .visdisp 
+
+entry .totals -textvariable runningbal
+pack .totals 
+
+# configure the widget here
+.visdisp configure -state disabled
+.totals configure -state disabled
+
+set total 0
+set runningbal 0
+set curopr ""
+
+set buttonlist [ list "1/x" "x^2" "x^3" "Clear" "AC" ]
+lappend buttonlist "ln" "e" "x^y" "sqrt" "/"
+lappend buttonlist  "PI" "7" "8" "9" "*" 
+lappend buttonlist "tan" "4" "5" "6" "-" 
+lappend buttonlist "sin" "1" "2" "3" "+" 
+lappend buttonlist "cos"  "0" "dec"  "+/- " "="     
+
+set listlen [ llength $buttonlist ]
+
+for { set i 0 } { $i < $listlen } { incr i 5 } {
+    frame .frame_$i 
+    pack .frame_$i -side top -expand 1 -fill both
+    for { set p 0 } { $p < 5 } { incr p 1 } {
+           set j [ lindex $buttonlist [ expr $i + $p ] ]
+           button .$i$j -text $j  -command "do_to_entry $j"
+           pack .$i$j -in .frame_$i -side left -expand 1 -fill both
+    }
+}
+
+proc do_to_entry { i } {
+    if [ expr [ string compare "-" "$i" ] == 0 ] { 
+        set i "d"
+    }
+    switch -exact $i {
+        1 {add_to_entry $i }
+        2 {add_to_entry $i }
+        3 {add_to_entry $i }
+        4 {add_to_entry $i }
+        5 {add_to_entry $i }
+        6 {add_to_entry $i }
+        7 {add_to_entry $i }
+        8 {add_to_entry $i }
+        9 {add_to_entry $i }
+        0 {add_to_entry $i }
+        "dec" {add_to_entry "." }
+        "+" { do_operation $i }
+        "/" { do_operation $i }
+        "d" { do_operation $i }
+        "*" { do_operation $i }
+         "=" { do_operation $i }
+         "Clear" { clear_all 1}
+         "AC" { clear_all 0 }
+         "x^2" { single_action $i }
+         "x^3" { single_action $i }
+         "PI" { single_action $i }
+         "1/x" { single_action $i }
+         "cos" { single_action $i }
+         "sin" { single_action $i }
+         "tan" { single_action $i }
+         "sqrt" { single_action $i }
+         "e" { single_action $i }
+         "ln" { single_action $i }
+         "+/-" { single_action $i }
+         "x^y" { do_operation $i }
+    }
+}
+
+proc single_action { oper } {
+    global total
+    switch -exact $oper {
+        "x^2" { set total [ expr pow($total,2) ] }
+        "x^3" { set total [ expr pow($total, 3) ] }
+        "PI"   { set total [ expr double(22)/double(7) ] }
+        "1/x"   { set total [ expr double(1)/double($total) ] }
+        "cos"   { set total [ expr cos(double($total)) ] }
+        "sin"   { set total [ expr sin(double($total)) ] }
+        "tan"   { set total [ expr tan(double($total)) ] }
+        "sqrt"   { set total [ expr sqrt(double($total)) ] }
+        "e"   { set total [ expr exp(double($total)) ] }
+        "ln"   { set total [ expr log(double($total)) ] }
+        "+/-"   { set total [ expr -1 * $total ] }
+     }
+}
+
+proc clear_all { i } {
+    global total runningbal
+     if [ expr $i == 0 ] { 
+        set runningbal 0 
+     }
+     set total 0
+}
+
+proc perform_operation { oper } {
+    global runningbal total
+    switch -exact $oper {
+        "+" { set runningbal [ expr $runningbal + $total ] }
+        "/" { set runningbal [ expr double($runningbal) / double($total) ] }
+        "*" { set runningbal [ expr $runningbal * $total ] }
+        "d" { set runningbal [ expr $runningbal - $total ] }
+        "x^y" { set runningbal [ expr pow($runningbal, $total) ] }
+    }
+}
+
+proc do_operation { oper } {
+    global curopr total runningbal
+    if [ expr [ string compare $curopr "" ] == 0 ] { 
+        set curopr $oper
+        set runningbal $total
+    } else {
+        if [ expr [ string compare $curopr "=" ] != 0 ] {
+            perform_operation $curopr
+        }
+        set curopr $oper
+    }
+    set total 0
+}
+
+proc add_to_entry { i } {
+    global total curopr
+    if [  expr [ string compare "$total" "0" ] != 0 ] {
+        if [ expr [ string compare $i "." ] == 0 ] {
+            if [ expr [ string first "." $total  ] < 0 ] {
+                # no decimal so add it
+                set newval "$total$i"
+            } else {
+                set newval "$total"
+            }
+        } else {
+            # not a decimal so business as usual
+            set newval "$total$i"
+        }
+    } else { 
+         set newval "$i"
+    }
+    if [ expr [ string compare $curopr "=" ] == 0 ] {
+        set curopr ""
+    }
+    set total $newval
+}

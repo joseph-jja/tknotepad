@@ -1,0 +1,36 @@
+# patch for adding some rpm spec file creation code
+
+menu .filemenu.rpm -tearoff 0
+.filemenu add cascade -label "RPM" -underline 0 -menu .filemenu.rpm
+.filemenu.rpm add command -label "New spec file" -underline 0 -command "insertspec"
+.filemenu.rpm add command -label "%define" -command " insertSPECtag %define"
+.filemenu.rpm add command -label "%prep" -command " insertSPECtag %prep"
+.filemenu.rpm add command -label "%setup" -command " insertSPECtag %setup"
+.filemenu.rpm add command -label "%description" -command " insertSPECtag %description"
+.filemenu.rpm add command -label "%install" -command " insertSPECtag %install"
+.filemenu.rpm add command -label "%files" -command " insertSPECtag %files"
+.filemenu.rpm add command -label "%doc" -command " insertSPECtag %doc"
+.filemenu.rpm add command -label "%clean" -command " insertSPECtag %clean"
+
+proc insertnewspec {} {
+	setTextTitleAsNew
+
+	.textarea insert 1.0 "%define name\n%define version\n%define release \
+		\n%define packager\n\nSummary:\nName: %{name}\nVersion: %{version} \
+		\nRelease: %{release}\nCopyright:\nGroup:\nSource: %{name}-%{version}.tar.gz \
+		\nSource1:\nPatch:\nBuildroot: /tmp/%{name}-build\nURL:\n \
+		\n%description\n\n%prep\n\n%setup\n\n%patch\n\n%build\n\n%install\n \
+		\n%clean\n\n%files\n\n%doc\n\n%changelog\n"
+	
+	textSetCursor "1.0"
+	keyposn
+}
+
+proc insertspec {} {
+	switchcase filetosave insertnewspec
+}
+
+proc insertSPECtag { specTag } {
+	deletetext
+	.textarea insert insert $specTag
+}

@@ -1,0 +1,25 @@
+ .filemenu.help delete last
+ .filemenu.help delete last
+
+.filemenu.help add command -label "Help" -underline 0 -command "showhelp"
+.filemenu.help add command -label "About" -underline 0 -command "aboutme"
+
+proc showhelp {} {
+    global wordWrap FGCOLOR BGCOLOR textFont
+   set helpwin .helpwin
+	catch {destroy $helpwin}
+	toplevel $helpwin
+	wm title $helpwin "Help"
+    wm geometry $helpwin 80x25
+    text $helpwin.helptext -relief sunken -bd 0 -yscrollcommand "$helpwin.hyscroll set" -wrap $wordWrap \
+              -width 1 -height 1 -fg $FGCOLOR -bg $BGCOLOR -font $textFont -setgrid 1
+scrollbar $helpwin.hyscroll -command "$helpwin.helptext yview"
+pack $helpwin.helptext  -side left -expand 1 -fill both
+pack $helpwin.hyscroll -side right -expand 0 -fill both
+	set newnamefile [open ./README.help r]
+           while {![eof $newnamefile]} {
+	    $helpwin.helptext insert end [read -nonewline $newnamefile]
+	}
+     focus $helpwin.helptext
+}
+
